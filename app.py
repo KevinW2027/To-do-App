@@ -13,7 +13,7 @@ class Task(db.Model):
     # db.Column reps a col in the database
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
-
+    date_created = db.Column(db.DateTime, default=datetime.now())
 @app.route('/', methods=['GET','POST'])
 def index():
     # add new task into database
@@ -28,7 +28,7 @@ def index():
         except:
             return 'Error adding task!'
     all_tasks = Task.query.all()
-    return render_template('index.html', task=all_tasks)
+    return render_template('index.html', tasks=all_tasks)
 
 @app.route('/delete/<int:task_id>')
 def delete(task_id):
