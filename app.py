@@ -1,7 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
-"""from datetime import datetime
-"""
+from datetime import datetime
 app = Flask(__name__)
 
 # Create SQLite database instance
@@ -19,7 +18,7 @@ class Task(db.Model):
 def index():
     # add new task into database
     if request.method =='POST':
-        task_content = request.form('content')
+        task_content = request.form.get('content')
         new_task = Task(content=task_content)
         # Put new Task in Database
         try:
@@ -31,7 +30,14 @@ def index():
     all_tasks = Task.query.all()
     return render_template('index.html', task=all_tasks)
 
-
+@app.route('/delete/<int:task_id>')
+def delete(task_id):
+    task=Task.query.get(task_id)
+    if task:
+        db.session.delete(task)
+        db.session.commit()
+    return redirect('/')
+    
 
 
 
